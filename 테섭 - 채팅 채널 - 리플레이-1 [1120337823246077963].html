@@ -1,0 +1,3628 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>테섭 - 리플레이-1</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <style>
+        @font-face {
+            src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-300.woff);
+            font-family: Whitney;
+            font-weight: 300;
+        }
+
+        @font-face {
+            src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-400.woff);
+            font-family: Whitney;
+            font-weight: 400;
+        }
+
+        @font-face {
+            src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-500.woff);
+            font-family: Whitney;
+            font-weight: 500;
+        }
+
+        @font-face {
+            src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-600.woff);
+            font-family: Whitney;
+            font-weight: 600;
+        }
+
+        @font-face {
+            src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-700.woff);
+            font-family: Whitney;
+            font-weight: 700;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: #36393e;
+            color: #dcddde;
+            font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 17px;
+            font-weight: 400;
+        }
+
+        a {
+            color: #00aff4;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            object-fit: contain;
+            image-rendering: high-quality;
+            image-rendering: -webkit-optimize-contrast;
+        }
+
+        .preamble {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            max-width: 100%;
+            padding: 1rem;
+        }
+
+        .preamble__guild-icon-container {
+            grid-column: 1;
+        }
+
+        .preamble__guild-icon {
+            max-width: 88px;
+            max-height: 88px;
+        }
+
+        .preamble__entries-container {
+            grid-column: 2;
+            margin-left: 1rem;
+        }
+
+        .preamble__entry {
+            margin-bottom: 0.15rem;
+            color: #ffffff;
+            font-size: 1.4rem;
+        }
+
+        .preamble__entry--small {
+            font-size: 1rem;
+        }
+
+        .chatlog {
+            padding: 1rem 0;
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chatlog__message-group {
+            margin-bottom: 1rem;
+        }
+
+        .chatlog__message-container {
+            background-color: transparent;
+            transition: background-color 1s ease;
+        }
+
+        .chatlog__message-container--highlighted {
+            background-color: rgba(114, 137, 218, 0.2);
+        }
+
+        .chatlog__message-container--pinned {
+            background-color: rgba(249, 168, 37, 0.05);
+        }
+
+        .chatlog__message {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            padding: 0.15rem 0;
+            direction: ltr;
+            unicode-bidi: bidi-override;
+        }
+
+        .chatlog__message:hover {
+            background-color: #32353b;
+        }
+
+        .chatlog__message:hover .chatlog__short-timestamp {
+            display: block;
+        }
+
+        .chatlog__message-aside {
+            grid-column: 1;
+            width: 72px;
+            padding: 0.15rem 0.15rem 0 0.15rem;
+            text-align: center;
+        }
+
+        .chatlog__reference-symbol {
+            height: 10px;
+            margin: 6px 4px 4px 36px;
+            border-left: 2px solid #4f545c;
+            border-top: 2px solid #4f545c;
+            border-radius: 8px 0 0 0;
+        }
+
+        .chatlog__avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .chatlog__short-timestamp {
+            display: none;
+            color: #a3a6aa;
+            font-size: 0.75rem;
+            font-weight: 500;
+            direction: ltr;
+            unicode-bidi: bidi-override;
+        }
+
+        .chatlog__message-primary {
+            grid-column: 2;
+            min-width: 0;
+        }
+
+        .chatlog__reference {
+            display: flex;
+            margin-bottom: 0.15rem;
+            align-items: center;
+            color: #b5b6b8;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chatlog__reference-avatar {
+            width: 16px;
+            height: 16px;
+            margin-right: 0.25rem;
+            border-radius: 50%;
+        }
+
+        .chatlog__reference-author {
+            margin-right: 0.3rem;
+            font-weight: 600;
+        }
+
+        .chatlog__reference-content {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chatlog__reference-link {
+            cursor: pointer;
+        }
+
+        .chatlog__reference-link * {
+            display: inline;
+            pointer-events: none;
+        }
+
+        .chatlog__reference-link .hljs {
+            display: inline;
+        }
+
+        .chatlog__reference-link:hover {
+            color: #ffffff;
+        }
+
+        .chatlog__reference-link:hover *:not(.chatlog__markdown-spoiler) {
+            color: inherit;
+        }
+
+        .chatlog__reference-edited-timestamp {
+            margin-left: 0.25rem;
+            color: #a3a6aa;
+            font-size: 0.75rem;
+            font-weight: 500;
+            direction: ltr;
+            unicode-bidi: bidi-override;
+        }
+
+        .chatlog__header {
+            margin-bottom: 0.1rem;
+        }
+
+        .chatlog__author {
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        .chatlog__bot-label {
+            position: relative;
+            top: -0.1rem;
+            margin-left: 0.3rem;
+            padding: 0.05rem 0.3rem;
+            border-radius: 3px;
+            background-color: #5865F2;
+            color: #ffffff;
+            font-size: 0.625rem;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .chatlog__timestamp {
+            margin-left: 0.3rem;
+            color: #a3a6aa;
+            font-size: 0.75rem;
+            font-weight: 500;
+            direction: ltr;
+            unicode-bidi: bidi-override;
+        }
+
+        .chatlog__content {
+            padding-right: 1rem;
+            font-size: 0.95rem;
+            word-wrap: break-word;
+        }
+
+        .chatlog__edited-timestamp {
+            margin-left: 0.15rem;
+            color: #a3a6aa;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .chatlog__attachment {
+            position: relative;
+            width: fit-content;
+            margin-top: 0.3rem;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .chatlog__attachment--hidden {
+            cursor: pointer;
+            box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .chatlog__attachment--hidden * {
+            pointer-events: none;
+        }
+
+        .chatlog__attachment-spoiler-caption {
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 999;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #dcddde;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.05rem;
+        }
+
+        .chatlog__attachment--hidden .chatlog__attachment-spoiler-caption {
+            display: block;
+        }
+
+        .chatlog__attachment--hidden:hover .chatlog__attachment-spoiler-caption {
+            color: #fff;
+        }
+
+        .chatlog__attachment-media {
+            max-width: 45vw;
+            max-height: 500px;
+            vertical-align: top;
+            border-radius: 3px;
+        }
+
+        .chatlog__attachment--hidden .chatlog__attachment-media {
+            filter: blur(44px);
+        }
+
+        .chatlog__attachment-generic {
+            max-width: 520px;
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            border: 1px solid #292b2f;
+            border-radius: 3px;
+            background-color: #2f3136;
+            overflow: hidden;
+        }
+
+        .chatlog__attachment--hidden .chatlog__attachment-generic {
+            filter: blur(44px);
+        }
+
+        .chatlog__attachment-generic-icon {
+            float: left;
+            width: 30px;
+            height: 100%;
+            margin-right: 10px;
+        }
+
+        .chatlog__attachment-generic-size {
+            color: #72767d;
+            font-size: 12px;
+        }
+
+        .chatlog__attachment-generic-name {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .chatlog__embed {
+            display: flex;
+            margin-top: 0.3rem;
+            max-width: 520px;
+        }
+
+        .chatlog__embed-color-pill {
+            flex-shrink: 0;
+            width: 0.25rem;
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+        }
+
+        .chatlog__embed-color-pill--default {
+            background-color: #202225;
+        }
+
+        .chatlog__embed-content-container {
+            display: flex;
+            flex-direction: column;
+            padding: 0.5rem 0.6rem;
+            border: 1px solid rgba(46, 48, 54, 0.6);
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+            background-color: rgba(46, 48, 54, 0.3);
+        }
+
+        .chatlog__embed-content {
+            display: flex;
+            width: 100%;
+        }
+
+        .chatlog__embed-text {
+            flex: 1;
+        }
+
+        .chatlog__embed-author-container {
+            display: flex;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        .chatlog__embed-author-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+            border-radius: 50%;
+        }
+
+        .chatlog__embed-author {
+            color: #ffffff;
+            font-size: 0.875rem;
+            font-weight: 600;
+            direction: ltr;
+            unicode-bidi: bidi-override;
+        }
+
+        .chatlog__embed-author-link {
+            color: #ffffff;
+        }
+
+        .chatlog__embed-title {
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .chatlog__embed-description {
+            color: #dcddde;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .chatlog__embed-fields {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0 0.5rem;
+        }
+
+        .chatlog__embed-field {
+            flex: 0;
+            min-width: 100%;
+            max-width: 506px;
+            padding-top: 0.6rem;
+            font-size: 0.875rem;
+        }
+
+        .chatlog__embed-field--inline {
+            flex: 1;
+            flex-basis: auto;
+            min-width: 50px;
+        }
+
+        .chatlog__embed-field-name {
+            margin-bottom: 0.2rem;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .chatlog__embed-field-value {
+            color: #dcddde;
+            font-weight: 500;
+        }
+
+        .chatlog__embed-thumbnail {
+            flex: 0;
+            max-width: 80px;
+            max-height: 80px;
+            margin-left: 1.2rem;
+            border-radius: 3px;
+        }
+
+        .chatlog__embed-image-container {
+            margin-top: 0.6rem;
+        }
+
+        .chatlog__embed-image {
+            max-width: 500px;
+            max-height: 400px;
+            border-radius: 3px;
+        }
+
+        .chatlog__embed-footer {
+            margin-top: 0.6rem;
+            color: #dcddde;
+        }
+
+        .chatlog__embed-footer-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.2rem;
+            border-radius: 50%;
+            vertical-align: middle;
+        }
+
+        .chatlog__embed-footer-text {
+            vertical-align: middle;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .chatlog__embed-plainimage {
+            max-width: 45vw;
+            max-height: 500px;
+            vertical-align: top;
+            border-radius: 3px;
+        }
+
+        .chatlog__embed-spotify {
+            border: 0;
+        }
+
+        .chatlog__embed-youtube-container {
+            margin-top: 0.6rem;
+        }
+
+        .chatlog__embed-youtube {
+            border: 0;
+            border-radius: 3px;
+        }
+
+        .chatlog__sticker {
+            width: 180px;
+            height: 180px;
+        }
+
+        .chatlog__sticker--media {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .chatlog__reactions {
+            display: flex;
+        }
+
+        .chatlog__reaction {
+            display: flex;
+            margin: 0.35rem 0.1rem 0.1rem 0;
+            padding: 0.125rem 0.375rem;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            background-color: #2f3136;
+            align-items: center;
+        }
+
+        .chatlog__reaction:hover {
+            border: 1px solid hsla(0,0%,100%,.2);
+            background-color: transparent;
+        }
+
+        .chatlog__reaction-count {
+            min-width: 9px;
+            margin-left: 0.35rem;
+            color: #b9bbbe;
+            font-size: 0.875rem;
+        }
+
+        .chatlog__reaction:hover .chatlog__reaction-count {
+            color: #dcddde;
+        }
+
+        .chatlog__markdown {
+            max-width: 100%;
+            line-height: 1.3;
+            overflow-wrap: break-word;
+        }
+
+        .chatlog__markdown-preserve {
+            white-space: pre-wrap;
+        }
+
+        .chatlog__markdown-spoiler {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .chatlog__markdown-spoiler--hidden {
+            cursor: pointer;
+            background-color: #202225;
+            color: rgba(0, 0, 0, 0);
+        }
+
+        .chatlog__markdown-spoiler--hidden:hover {
+            background-color: rgba(32, 34, 37, 0.8);
+        }
+
+        .chatlog__markdown-spoiler--hidden::selection {
+            color: rgba(0, 0, 0, 0);
+        }
+
+        .chatlog__markdown-quote {
+            display: flex;
+            margin: 0.05rem 0;
+        }
+
+        .chatlog__markdown-quote-border {
+            margin-right: 0.5rem;
+            border: 2px solid #4f545c;
+            border-radius: 3px;
+        }
+
+        .chatlog__markdown-pre {
+            background-color: #2f3136;
+            font-family: "Consolas", "Courier New", Courier, monospace;
+        }
+
+        .chatlog__markdown-pre--multiline {
+            margin-top: 0.25rem;
+            padding: 0.5rem;
+            border: 2px solid #282b30;
+            border-radius: 5px;
+            color: #b9bbbe;
+        }
+
+        .chatlog__markdown-pre--multiline.hljs {
+            background-color: inherit;
+            color: inherit;
+        }
+
+        .chatlog__markdown-pre--inline {
+            padding: 2px;
+            border-radius: 3px;
+            font-size: 0.85rem;
+        }
+
+        .chatlog__markdown-mention {
+            border-radius: 3px;
+            padding: 0 2px;
+            background-color: rgba(88, 101, 242, .3);
+            color: #dee0fc;
+            font-weight: 500;
+        }
+
+        .chatlog__markdown-mention:hover {
+            background-color: #5865f2;
+            color: #ffffff
+        }
+
+        .chatlog__markdown-timestamp {
+            border-radius: 3px;
+            padding: 0 2px;
+            color: #a3a6aa;
+        }
+
+        .chatlog__emoji {
+            width: 1.325rem;
+            height: 1.325rem;
+            margin: 0 0.06rem;
+            vertical-align: -0.4rem;
+        }
+
+        .chatlog__emoji--small {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .chatlog__emoji--large {
+            width: 2.8rem;
+            height: 2.8rem;
+        }
+
+        .postamble {
+            padding: 1.25rem;
+        }
+
+        .postamble__entry {
+            color: #ffffff;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.chatlog__markdown-pre--multiline').forEach(e => hljs.highlightBlock(e));
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.8.1/lottie.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.chatlog__sticker--media[data-source]').forEach(e => {
+                const imageDataUrl = e.getAttribute('data-source');
+
+                const anim = lottie.loadAnimation({
+                  container: e,
+                  renderer: 'svg',
+                  loop: true,
+                  autoplay: true,
+                  path: imageDataUrl
+                });
+
+                anim.addEventListener('data_failed', () =>
+                    e.innerHTML = '<strong>[Sticker cannot be rendered]</strong>'
+                );
+            });
+        });
+    </script>
+
+    <script>
+        function scrollToMessage(event, id) {
+            var element = document.getElementById('chatlog__message-container-' + id);
+            if (!element)
+                return;
+
+            event.preventDefault();
+            element.classList.add('chatlog__message-container--highlighted');
+
+            window.scrollTo({
+                top: element.getBoundingClientRect().top - document.body.getBoundingClientRect().top - (window.innerHeight / 2),
+                behavior: 'smooth'
+            });
+
+            window.setTimeout(function() {
+                element.classList.remove('chatlog__message-container--highlighted');
+            }, 2000);
+        }
+
+        function showSpoiler(event, element) {
+            if (!element)
+                return;
+
+            if (element.classList.contains('chatlog__attachment--hidden')) {
+                event.preventDefault();
+                element.classList.remove('chatlog__attachment--hidden');
+            }
+
+            if (element.classList.contains('chatlog__markdown-spoiler--hidden')) {
+                event.preventDefault();
+                element.classList.remove('chatlog__markdown-spoiler--hidden');
+            }
+        }
+    </script>
+
+    <svg style="display: none">
+        <symbol id="attachment-icon" viewBox="0 0 720 960">
+            <path fill="#f4f5fb" d="M50,935a25,25,0,0,1-25-25V50A25,25,0,0,1,50,25H519.6L695,201.32V910a25,25,0,0,1-25,25Z"/>
+            <path fill="#7789c4" d="M509.21,50,670,211.63V910H50V50H509.21M530,0H50A50,50,0,0,0,0,50V910a50,50,0,0,0,50,50H670a50,50,0,0,0,50-50h0V191Z"/>
+            <path fill="#f4f5fb" d="M530,215a25,25,0,0,1-25-25V50a25,25,0,0,1,16.23-23.41L693.41,198.77A25,25,0,0,1,670,215Z"/>
+            <path fill="#7789c4" d="M530,70.71,649.29,190H530V70.71M530,0a50,50,0,0,0-50,50V190a50,50,0,0,0,50,50H670a50,50,0,0,0,50-50Z"/>
+        </symbol>
+    </svg>
+</head>
+<body>
+
+<div class="preamble">
+    <div class="preamble__guild-icon-container">
+        <img class="preamble__guild-icon" src="https://cdn.discordapp.com/icons/1036561666122457098/fca913aa48e845958ac1cc104cb0693d.png" alt="Guild icon" loading="lazy">
+    </div>
+    <div class="preamble__entries-container">
+        <div class="preamble__entry">테섭</div>
+        <div class="preamble__entry">채팅 채널 / 리플레이-1</div>
+
+
+    </div>
+</div>
+
+<div class="chatlog">
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120337986006028358" class="chatlog__message-container " data-message-id="1120337986006028358">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:03 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">안녕하세요!</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120338162175184977" class="chatlog__message-container " data-message-id="1120338162175184977">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:03 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">이것은 기론추리교전의 리플레이입니다...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120338314927554570" class="chatlog__message-container " data-message-id="1120338314927554570">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:04 PM">22:04</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">기론추리교전이란... 추리와 전투의 콜라보 컨텐츠인데요</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120338514689663087" class="chatlog__message-container " data-message-id="1120338514689663087">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:05 PM">22:05</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">범인의 &#39;도전장&#39;이 카페의 모처 게시판에 업로드 되면</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120338639587655690" class="chatlog__message-container " data-message-id="1120338639587655690">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:05 PM">22:05</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그 도전장을 보고 탐정들이 참가 의사를 밝히는 것으로 컨텐츠 참여 인원 모집이 됩니다...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120338910082515004" class="chatlog__message-container " data-message-id="1120338910082515004">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:06 PM">22:06</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">이번의 범인, 곧 출제자는, &quot;저, 양희태 입니다만...&quot;</span>
+
+                            <span class="chatlog__edited-timestamp" title="19-Jun-23 10:12 PM">(edited)</span>
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120339002772439061" class="chatlog__message-container " data-message-id="1120339002772439061">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:07 PM">22:07</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">도전장은 다음과 같습니다...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120339240207798272" class="chatlog__message-container " data-message-id="1120339240207798272">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:08 PM">22:08</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">어떤 방 안에서, 한 남자가 살해당했다. 사건 현장 내부에는 남자의 시체 이외에 그 무엇도 없다. 범인도, 흉기도 부재하다. 방에는 문과 창문이 하나씩 나 있다. 창문은 잠겨있는데다, 쇠창살까지 붙어 있어 인간이 탈출할 수는 없다. 시신 발견 당시 문은 잠겨있었다. 그렇다면, 범인은 남자를 죽이고 어떻게 탈출하였는가.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120339442096422982" class="chatlog__message-container " data-message-id="1120339442096422982">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:08 PM">22:08</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;저는... 그런가. 터널링 효과로, 극한의 확률로... 벽을 통과했다고 하겠습니다.&quot;</span>
+
+                            <span class="chatlog__edited-timestamp" title="19-Jun-23 10:12 PM">(edited)</span>
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120339529354723410" class="chatlog__message-container " data-message-id="1120339529354723410">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:09 PM">22:09</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">탐정... 슬슬 나오는 편이 좋습니다</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120339667515093093" class="chatlog__message-container " data-message-id="1120339667515093093">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:09 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;내가 탐정이라고?&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120339681914126356" class="chatlog__message-container " data-message-id="1120339681914126356">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:09 PM">22:09</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;귀찮게 굴기는...&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120339743306166352" class="chatlog__message-container " data-message-id="1120339743306166352">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:10 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그렇다고 판단됩니다만...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120339840647577721" class="chatlog__message-container " data-message-id="1120339840647577721">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:10 PM">22:10</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">이 전투에서... 범인은 인원 수에 관계 없이 선공을 가져갑니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120340019903746128" class="chatlog__message-container " data-message-id="1120340019903746128">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:11 PM">22:11</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">범인이 자신의 턴에 할 수 있는 일은, <em>탐정을 공격</em>, 또는 <em>정신감쇠</em>가 있습니다만...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120340105845035069" class="chatlog__message-container " data-message-id="1120340105845035069">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:11 PM">22:11</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;탐정, 현재의 정신력은 얼마나 됩니까?&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120340288406290463" class="chatlog__message-container " data-message-id="1120340288406290463">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:12 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">10입니다. -오너가</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120340480245387294" class="chatlog__message-container " data-message-id="1120340480245387294">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:13 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">탐정의 정신력은 곧 질문 가능 횟수로 치환되므로, 범인의 입장에서는 질문을 하나라도 줄이는 게 편할 수 있겠습니다...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120340608121307166" class="chatlog__message-container " data-message-id="1120340608121307166">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:13 PM">22:13</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그런고로, 정신감쇠를 사용해보겠습니다... d2를 굴려 나오는 수만큼 상대의 정신력이 감소합니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120340706398044233" class="chatlog__message-container " data-message-id="1120340706398044233">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:13 PM">22:13</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">!r d2</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120340707887034428" class="chatlog__message-container " data-message-id="1120340707887034428">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/1036583571827195914/2f49a1fb35c97e2e7714a4659a9b2d8b.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(52, 152, 219)" title="키-군#2717" data-user-id="1036583571827195914">키-군</span>
+
+                            <span class="chatlog__bot-label">BOT</span>
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:13 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">d2 주사위의 결과: 2</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120340767462936626" class="chatlog__message-container " data-message-id="1120340767462936626">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:14 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">정신력을 2 감소시켰습니다...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120340811423416370" class="chatlog__message-container " data-message-id="1120340811423416370">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:14 PM">22:14</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;질문... 받도록 하겠습니다.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120340975802392717" class="chatlog__message-container " data-message-id="1120340975802392717">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:15 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;뭐야? 아무것도 안 했는데 당했다니... 기분이 더럽네.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120341054470770739" class="chatlog__message-container " data-message-id="1120341054470770739">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:15 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;그렇습니까? 저는 기분이 나쁘지 않습니다.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120341681108164669" class="chatlog__message-container " data-message-id="1120341681108164669">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:17 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve"><strong>청색 가설</strong> 제시하겠습니다.</span>
+
+                            <span class="chatlog__edited-timestamp" title="19-Jun-23 10:19 PM">(edited)</span>
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120342154066268262" class="chatlog__message-container " data-message-id="1120342154066268262">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:19 PM">22:19</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;사실 천장이 없었던 거 아냐? 벽을 타고 어떻게든 기어올라 나갔다던가.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120342303224119358" class="chatlog__message-container " data-message-id="1120342303224119358">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:20 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve"><strong>적색 영창</strong> &quot;방에는 천장이 있었습니다.&quot;</span>
+
+                            <span class="chatlog__edited-timestamp" title="19-Jun-23 10:20 PM">(edited)</span>
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120342441631957144" class="chatlog__message-container " data-message-id="1120342441631957144">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:20 PM">22:20</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">가설이 반박되었으므로 탐정의 턴이 종료됩니다...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120342444735737906" class="chatlog__message-container " data-message-id="1120342444735737906">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:20 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">이렇게 되면 소중한 질문 기회가 하나 날아간거죠? -오너가</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120342459482910770" class="chatlog__message-container " data-message-id="1120342459482910770">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:20 PM">22:20</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">우와</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120342462767046716" class="chatlog__message-container " data-message-id="1120342462767046716">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:20 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그렇습니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120342517007794368" class="chatlog__message-container " data-message-id="1120342517007794368">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:21 PM">22:21</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그렇다면 현재 나이트의 정신력은 얼마죠?</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120342593029542038" class="chatlog__message-container " data-message-id="1120342593029542038">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:21 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">10 -&gt; 정신감쇠로 8 -&gt; 청색가설 1회로 7입니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120342623379521616" class="chatlog__message-container " data-message-id="1120342623379521616">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:21 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그렇습니다...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120342672817782935" class="chatlog__message-container " data-message-id="1120342672817782935">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:21 PM">22:21</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;생각보다 쉽지 않은가 봅니다.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120342893329133649" class="chatlog__message-container " data-message-id="1120342893329133649">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:22 PM">22:22</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">딱히 이기고 싶은 마음은 없지만, 그렇다고 지고 싶지도 않기 때문에, 다시 <strong>정신감쇠</strong>를 사용합니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120342906692173986" class="chatlog__message-container " data-message-id="1120342906692173986">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:22 PM">22:22</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">!r d2</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120342908361510912" class="chatlog__message-container " data-message-id="1120342908361510912">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/1036583571827195914/2f49a1fb35c97e2e7714a4659a9b2d8b.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(52, 152, 219)" title="키-군#2717" data-user-id="1036583571827195914">키-군</span>
+
+                            <span class="chatlog__bot-label">BOT</span>
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:22 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">d2 주사위의 결과: 1</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120342960001781880" class="chatlog__message-container " data-message-id="1120342960001781880">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:22 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">탐정의 정신력을 1 깎았습니다...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120342971489996810" class="chatlog__message-container " data-message-id="1120342971489996810">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:22 PM">22:22</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;어지럽습니까?&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120343011927273544" class="chatlog__message-container " data-message-id="1120343011927273544">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:23 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;짜증나...&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120343047440449637" class="chatlog__message-container " data-message-id="1120343047440449637">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:23 PM">22:23</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;웬 아저씨랑 이렇게 어울려야하는지.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120343124762427533" class="chatlog__message-container " data-message-id="1120343124762427533">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:23 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;기혼자가 아닙니까?&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120343153459871744" class="chatlog__message-container " data-message-id="1120343153459871744">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:23 PM">22:23</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;그렇다면 당신은 언제나 아저씨와 어울리고 있을 겁니다.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120343246825082930" class="chatlog__message-container " data-message-id="1120343246825082930">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:24 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;내 집 아저씨는 당신보다 잘생겼어.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120343267758854154" class="chatlog__message-container " data-message-id="1120343267758854154">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:24 PM">22:24</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">추리를 할까 공격을 할까 고민하는 표정</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120343323396276285" class="chatlog__message-container " data-message-id="1120343323396276285">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:24 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">갸웃?</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120343418284036196" class="chatlog__message-container " data-message-id="1120343418284036196">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:24 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve"><strong>복창 이행</strong>이 잘 이해가 안가는데 예시로 들어볼까요?</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120343463536365568" class="chatlog__message-container " data-message-id="1120343463536365568">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:24 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">예시로 들어보시죠.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120345719908356126" class="chatlog__message-container " data-message-id="1120345719908356126">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:33 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;문은 방의 안이 아니라 바깥쪽에서 잠겨있었다. 그리고 범인은 그 열쇠를 가지고 있어서 죽이고 문을 잠갔다.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120345737235009596" class="chatlog__message-container " data-message-id="1120345737235009596">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:33 PM">22:33</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">근데 이건 청색가설아닌가요.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120345822693965888" class="chatlog__message-container " data-message-id="1120345822693965888">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:34 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그건... 청색가설이군요</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120345915190943794" class="chatlog__message-container " data-message-id="1120345915190943794">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:34 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그럼 청색가설로 다시올릴게여</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120345972250263632" class="chatlog__message-container " data-message-id="1120345972250263632">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:34 PM">22:34</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve"><strong>[청색 가설]</strong> &quot;문은 방의 안이 아니라 바깥쪽에서 잠겨있었다. 그리고 범인은 그 열쇠를 가지고 있어서 죽이고 문을 잠갔다.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120346192728047639" class="chatlog__message-container " data-message-id="1120346192728047639">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:35 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">남자는 조금 놀란 표정이다...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120346229944111116" class="chatlog__message-container " data-message-id="1120346229944111116">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:35 PM">22:35</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;조금 놀랐습니다.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120346684346613761" class="chatlog__message-container " data-message-id="1120346684346613761">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:37 PM">22:37</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;정답입니다......&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120346714654658620" class="chatlog__message-container " data-message-id="1120346714654658620">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:37 PM">22:37</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;이건, 저의 패배가 되겠군요.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120346985157898351" class="chatlog__message-container " data-message-id="1120346985157898351">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:38 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;터널링이니 뭐니...&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120347016346746920" class="chatlog__message-container " data-message-id="1120347016346746920">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:39 PM">22:39</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;사이비 종교야?&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120347042909274154" class="chatlog__message-container " data-message-id="1120347042909274154">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:39 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;물리학입니다.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120347114006913024" class="chatlog__message-container " data-message-id="1120347114006913024">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:39 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;허접한 거짓말이나 치니까 당하는거야.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120347174203568199" class="chatlog__message-container " data-message-id="1120347174203568199">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:39 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;과학적으로, 성립가능합니다.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120347214242398239" class="chatlog__message-container " data-message-id="1120347214242398239">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:39 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">나이트는 이능력으로 엄청나게 큰 해머를 소환해냈습니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120347240771367006" class="chatlog__message-container " data-message-id="1120347240771367006">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:39 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">올려다본다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120347251978534932" class="chatlog__message-container " data-message-id="1120347251978534932">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:39 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">재수없는 아저씨를 향해서 휘두릅니다. (마무리묘사)</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120347335155798016" class="chatlog__message-container " data-message-id="1120347335155798016">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:40 PM">22:40</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;적당히 15세 이용가로 죽어줘-&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120347410007347210" class="chatlog__message-container " data-message-id="1120347410007347210">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:40 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">범인이 탐정의 <strong>청색 가설</strong>을 반박하지 못했을 경우, 범인의 남은 체력과 관계 없이 탐정의 승리로 마무리됩니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120347553981014026" class="chatlog__message-container " data-message-id="1120347553981014026">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:41 PM">22:41</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">물리학자는 여기저기가 부러진 모습으로 천천히 흐려져 간다...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120347977609916416" class="chatlog__message-container " data-message-id="1120347977609916416">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:42 PM">22:42</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve"><em>탐정, 승리</em></span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120348044509069424" class="chatlog__message-container " data-message-id="1120348044509069424">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:43 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">이겼다`</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120348060183167027" class="chatlog__message-container " data-message-id="1120348060183167027">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:43 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">축하드립니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120348067917463664" class="chatlog__message-container " data-message-id="1120348067917463664">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:43 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve"><em>정의는 승리한다!</em></span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120348100691771464" class="chatlog__message-container " data-message-id="1120348100691771464">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:43 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그런데 <strong>복창 이행</strong>은 대체 뭐였던 걸까요?</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120348127849877615" class="chatlog__message-container " data-message-id="1120348127849877615">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:43 PM">22:43</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">이긴 김에 예시를 좀 들어보시죠</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120348290408521879" class="chatlog__message-container " data-message-id="1120348290408521879">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:44 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">복창 이행은 청색 가설과 비슷한데요!@</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120348368560996464" class="chatlog__message-container " data-message-id="1120348368560996464">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:44 PM">22:44</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">청색 가설이 &quot;도전장에 대한 완전한 정답&quot;이라면</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120348434768080896" class="chatlog__message-container " data-message-id="1120348434768080896">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:44 PM">22:44</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">복창 이행은 힌트를 쌓기 위한 과정이라고 보시면 될 것 같습니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120348496143327272" class="chatlog__message-container " data-message-id="1120348496143327272">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:44 PM">22:44</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">이번 <strong>교전</strong>은 짧았기 때문에 기회가 없었네요!</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120348527395086387" class="chatlog__message-container " data-message-id="1120348527395086387">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:45 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">오오~</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120348548354035772" class="chatlog__message-container " data-message-id="1120348548354035772">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:45 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">예를 들어서 이런 <strong>복창 이행</strong>을 할 수가 있습니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120348761705693184" class="chatlog__message-container " data-message-id="1120348761705693184">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:45 PM">22:45</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;그거 쇠창살 맞아? [복창 이행] 쇠창살처럼 보이던 것은 사실 플라스틱 위에 은박지를 붙인 가짜다.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120348920816603177" class="chatlog__message-container " data-message-id="1120348920816603177">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:46 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;으음, 아마 맞을 거라고 생각합니다만.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120349009056379022" class="chatlog__message-container " data-message-id="1120349009056379022">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:46 PM">22:46</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve"><strong>적색 영창</strong> 쇠창살은 단단한 철제 쇠창살이다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120349083282972733" class="chatlog__message-container " data-message-id="1120349083282972733">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:47 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">이러면 캐릭터 묘사도 뭔가 마법을 걸었다가 쓰러져야되나요?</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120349152199581769" class="chatlog__message-container " data-message-id="1120349152199581769">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:47 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">하시면 제가 즐거울 것 같네요.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120349260693647493" class="chatlog__message-container " data-message-id="1120349260693647493">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:47 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">마법의 15세 이용가 뿅망치를 휘두르지만, 민첩하게 피한 탓에 헛스윙을 하고 고꾸라진다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120349310291279875" class="chatlog__message-container " data-message-id="1120349310291279875">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:48 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;느립니다.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120349350686621849" class="chatlog__message-container " data-message-id="1120349350686621849">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:48 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">(솔직히 빵터졌다)</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120349431066275850" class="chatlog__message-container " data-message-id="1120349431066275850">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:48 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">이번엔 제대로 들어간 복창 이행의 예시를 보여주시죠</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120349579905343579" class="chatlog__message-container " data-message-id="1120349579905343579">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:49 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;문이 어떻게 잠겼는데? [복창 이행] 문은 안쪽이 아니라 바깥쪽에서 잠겨 있었다.&quot;</span>
+
+                            <span class="chatlog__edited-timestamp" title="19-Jun-23 10:49 PM">(edited)</span>
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120349595403300915" class="chatlog__message-container " data-message-id="1120349595403300915">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:49 PM">22:49</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">이렇게 하면 되나요?</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120349709840699512" class="chatlog__message-container " data-message-id="1120349709840699512">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:49 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그렇습니다. 이번 사건에서, 문은 정말로 바깥쪽에서 잠겨있었으므로...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120349756212912178" class="chatlog__message-container " data-message-id="1120349756212912178">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:49 PM">22:49</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve"><strong>적색 영창</strong> 문은 안쪽이 아니라 바깥쪽에서 잠겨 있었다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120349818825490452" class="chatlog__message-container " data-message-id="1120349818825490452">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:50 PM">22:50</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">복창 이행을 그대로 적색 영창으로 되돌릴 수 있습니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120349965252841492" class="chatlog__message-container " data-message-id="1120349965252841492">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:50 PM">22:50</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">하지만, 진상을 왠지 밝히고 싶지 않을 경우에는 복창 이행을 <strong>거부</strong>하셔도 됩니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120350009188175973" class="chatlog__message-container " data-message-id="1120350009188175973">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:50 PM">22:50</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">의심의 눈초리가 상당히 쏠리겠지만 그게 범인의 선택이라면 어쩔 수 없죠...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120350193397809172" class="chatlog__message-container " data-message-id="1120350193397809172">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:51 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">거부하는 지점에서 수상해서 다음턴에 <strong>청색 가설</strong>로 제시하면 이기겠군요!</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120350256610160650" class="chatlog__message-container " data-message-id="1120350256610160650">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:51 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그렇습니다. 적확합니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120350387111727114" class="chatlog__message-container " data-message-id="1120350387111727114">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:52 PM">22:52</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">범인은 복창 이행의 거부를 적재적소에 쓰는 게 중요하겠네요.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120350447463571560" class="chatlog__message-container " data-message-id="1120350447463571560">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:52 PM">22:52</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">어쩌면 옳지 않은 복창 이행을 거부하는 것으로 일종의 블러프를 칠 수도 있겠죠...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120350607623065771" class="chatlog__message-container " data-message-id="1120350607623065771">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:53 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">귀여운 블러프 가능!</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120350688774459452" class="chatlog__message-container " data-message-id="1120350688774459452">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:53 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그렇습니다!</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120351324479959120" class="chatlog__message-container " data-message-id="1120351324479959120">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:56 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">문제 도전장 설계시부터 함정을 집어넣을 수도 있겠는데요 ㅋㅋㅋㅋ</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120351399562186892" class="chatlog__message-container " data-message-id="1120351399562186892">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:56 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">그렇습니다!</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120351612116946984" class="chatlog__message-container " data-message-id="1120351612116946984">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:57 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">사실 때려서 해결하는 방법의 리플레이도 보여드리고 싶었지만.,,</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-1120351666777112576" class="chatlog__message-container " data-message-id="1120351666777112576">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="19-Jun-23 10:57 PM">22:57</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">노인공경의 마음으로 참을게요.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120351758925967553" class="chatlog__message-container " data-message-id="1120351758925967553">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:57 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">(이미 때려죽였잖아...!)</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120351927968997488" class="chatlog__message-container " data-message-id="1120351927968997488">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:58 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;홀애비냄새난다...&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120351978195796008" class="chatlog__message-container " data-message-id="1120351978195796008">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:58 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">&quot;혼자 살고 있지 않습니다.&quot;</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120352066842407042" class="chatlog__message-container " data-message-id="1120352066842407042">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/669048338296995840/f03edf106b4061f4a8786bd8517b1e98.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="sunset42#0000" data-user-id="669048338296995840">사사키 나이트</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:59 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">알빠가 없어진 탐정=사사키 나이트는 자리를 떠납니다.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-1120352125210329189" class="chatlog__message-container " data-message-id="1120352125210329189">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="KPota#4088" data-user-id="1018876644917772379">양희태</span>
+
+
+                        <span class="chatlog__timestamp">19-Jun-23 10:59 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">잘가 나이트...</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+<div class="postamble">
+    <div class="postamble__entry">Exported 113 message(s)</div>
+</div>
+
+</body>
+
+</html>
